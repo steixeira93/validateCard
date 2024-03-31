@@ -22,7 +22,8 @@ The response will be a JSON indicating whether the card is valid or not:
 
 ```json
 {
-  "valid": true
+  "Brand": "Visa",
+  "Valid": true
 }
 ```
 
