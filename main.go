@@ -66,8 +66,15 @@ func validateCardHandler(w http.ResponseWriter, r *http.Request) {
 
 	valid, flag := validateCard(card.Number)
 
+	response := map[string]interface{}{"Valid": valid}
+	if valid {
+		response["Flag"] = flag
+	} else {
+		response["Flag"] = "No brand, as the card is not valid."
+	}
+
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]interface{}{"Valid": valid, "Flag": flag})
+	json.NewEncoder(w).Encode(response)
 }
 
 func main() {
