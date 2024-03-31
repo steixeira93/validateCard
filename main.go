@@ -14,10 +14,23 @@ type Card struct {
 	Number string `json:"number"`
 }
 
-func validateCard(number string) bool {
+func detectCardFlag(number string) string {
+	switch {
+	case strings.HasPrefix(number, "1"):
+		return "Visa"
+	case strings.HasPrefix(number, "2"):
+		return "Mastercard"
+	case strings.HasPrefix(number, "3"):
+		return "American Express"
+	default:
+		return "Unknow"
+	}
+}
+
+func validateCard(number string) (bool, string) {
 	number = strings.ReplaceAll(number, " ", "")
 	if _, err := strconv.Atoi(number); err != nil {
-		return false
+		return false, ""
 	}
 
 	sum := 0
@@ -37,7 +50,10 @@ func validateCard(number string) bool {
 		doubleNext = !doubleNext
 	}
 
-	return sum%10 == 0
+	isValid := sum%10 == 0
+	cardFlag := detectCardFlag(number)
+
+	return isValid, cardFlag
 }
 
 func validateCardHandler(w http.ResponseWriter, r *http.Request) {
@@ -48,10 +64,10 @@ func validateCardHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	valid := validateCard(card.Number)
+	valid, flag := validateCard(card.Number)
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]bool{"Valid": valid})
+	json.NewEncoder(w).Encode(map[string]interface{}{"Valid": valid, "Flag": flag})
 }
 
 func main() {
