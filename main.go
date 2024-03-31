@@ -67,7 +67,7 @@ func validateCardHandler(w http.ResponseWriter, r *http.Request) {
 	valid, flag := validateCard(card.Number)
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]interface{}{"Valid": valid, "Brand": flag})
+	json.NewEncoder(w).Encode(map[string]interface{}{"Valid": valid, "Flag": flag})
 }
 
 func main() {
